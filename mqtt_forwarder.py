@@ -86,7 +86,7 @@ parser.add_argument('-u', '--username', dest='username', action="store", metavar
                    help='MQTT boroker login username')
 parser.add_argument('-P', '--password', dest='password', action="store", metavar="$ECRET",
                    help='MQTT boroker login password')
-parser.add_argument('-p', '--port', dest='port', action="store", default="1883", metavar="1883",
+parser.add_argument('-p', '--port', dest='port', action="store", type=int, default="1883", metavar="1883",
                    help='MQTT boroker port')
 parser.add_argument('-v', '--verbose', dest='verbose', action="store_true", default=False,
                    help='Enable debug messages.')
