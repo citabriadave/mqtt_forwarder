@@ -82,6 +82,12 @@ parser.add_argument('-t', '--topic', dest='topic', action="store", default="sens
                    help='The listening MQTT topic.')
 parser.add_argument('-T', '--topic-error', dest='topicError', action="store", default="error/transformer", metavar="TOPIC",
                    help='The MQTT topic on which to publish the message (if it wasn\'t a success).')
+parser.add_argument('-u', '--username', dest='username', action="store", metavar="USERNAME",
+                   help='MQTT boroker login username')
+parser.add_argument('-P', '--password', dest='password', action="store", metavar="$ECRET",
+                   help='MQTT boroker login password')
+parser.add_argument('-P', '--port', dest='port', action="store", default="1883", metavar="1883",
+                   help='MQTT boroker port')
 parser.add_argument('-v', '--verbose', dest='verbose', action="store_true", default=False,
                    help='Enable debug messages.')
 
@@ -96,7 +102,11 @@ client = mqtt.Client()
 client.on_connect = on_connect
 client.on_message = on_message
 
-client.connect(args.host, 1883, 60)
+if args.username is not None:
+    client.username_pw_set(args.username, password=args.password)
+elif args.password is not None:
+    raise Exception('Login with password requires username.')
+client.connect(host=args.host, port=args.port, keepalive=60)
 
 client.loop_forever()
 
