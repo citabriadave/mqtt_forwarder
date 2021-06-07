@@ -58,11 +58,15 @@ def on_message(client, userdata, msg):
         newObject = json.loads(nodeData.decode('utf-8'))
         newObject['time'] = tstamp
         nodeData = json.dumps(newObject)
+        debug('hello')
         if not args.dryRun:
+          debug('there')
           resp = client.publish(mqttPath, nodeData)
           debug(f"Publish result: {resp.rc}.")
+          debug('done')
         else:
           debug("Dry run")
+        debug('bye')
     else:
         debug("Received message from {0} with payload {1}. Hash not found in hashMap".format(msg.topic, str(msg.payload)))
 
