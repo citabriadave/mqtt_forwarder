@@ -59,7 +59,8 @@ def on_message(client, userdata, msg):
         newObject['time'] = tstamp
         nodeData = json.dumps(newObject)
         if not args.dryRun:
-          client.publish(mqttPath, nodeData)
+          resp = client.publish(mqttPath, nodeData)
+          debug(f"Publish result: {resp.rc}.")
         else:
           debug("Dry run")
     else:
