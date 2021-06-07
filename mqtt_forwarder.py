@@ -42,7 +42,7 @@ def debug(msg):
     print (msg + "\n")
 
 def on_connect(client, userdata, flags, rc):
-    debug("Connected with result code "+str(rc))
+    debug(f"Connected with result: {mqtt.error_string(rc)}.")
 
     # Subscribing in on_connect() means that if we lose the connection and
     # reconnect then subscriptions will be renewed.
@@ -51,22 +51,18 @@ def on_connect(client, userdata, flags, rc):
 def on_message(client, userdata, msg):
     sensorName = msg.topic.split('/') [-1]
     if sensorName in hashMap.keys():
-        tstamp = int(time.time())
+        # tstamp = int(time.time())
         mqttPath = urllib.parse.urljoin(args.destination + '/', hashMap[sensorName])
         debug("Received message from {0} with payload {1} to be published to {2}".format(msg.topic, str(msg.payload), mqttPath))
         nodeData = msg.payload
-        newObject = json.loads(nodeData.decode('utf-8'))
-        newObject['time'] = tstamp
-        nodeData = json.dumps(newObject)
-        debug('hello')
+        # newObject = json.loads(nodeData.decode('utf-8'))
+        # newObject['time'] = tstamp
+        # nodeData = json.dumps(newObject)
         if not args.dryRun:
-          debug('there')
           resp = client.publish(mqttPath, nodeData)
-          debug(f"Publish result: {resp.rc}.")
-          debug('done')
+          debug(f"Publish result: {mqtt.error_string(resp.rc)}.")
         else:
           debug("Dry run")
-        debug('bye')
     else:
         debug("Received message from {0} with payload {1}. Hash not found in hashMap".format(msg.topic, str(msg.payload)))
 
